@@ -5,7 +5,7 @@ import streamlit as st
 from openai import OpenAI
 
 st.set_page_config(
-    page_title="AI Marketing Copilot",
+    page_title="AI 营销策略助手",
     page_icon="✨",
     layout="wide",
 )
@@ -26,9 +26,9 @@ st.markdown(
 st.markdown(
     """
     <div class="hero">
-      <div class="eyebrow">AI × Marketing Workflow</div>
-      <h1 style="margin: .35rem 0 .4rem 0;">AI Marketing Copilot</h1>
-      <div class="muted">把营销 Brief 快速转成可执行的消费者洞察、Big Idea、渠道策略、执行计划、预算与 KPI。</div>
+      <div class="eyebrow">AI × 营销工作流</div>
+      <h1 style="margin: .35rem 0 .4rem 0;">AI 营销策略助手</h1>
+      <div class="muted">把营销 Brief 快速转成可执行的消费者洞察、核心创意（Big Idea）、渠道策略、执行计划、预算与 KPI。</div>
     </div>
     """,
     unsafe_allow_html=True,
@@ -41,14 +41,14 @@ with st.sidebar:
         type="password",
         help="仅在当前会话中使用。部署时也可以通过 Streamlit Secrets 设置 OPENAI_API_KEY。",
     )
-    model = st.text_input("Model", value=os.getenv("OPENAI_MODEL", "gpt-5.6"))
+    model = st.text_input("模型", value=os.getenv("OPENAI_MODEL", "gpt-5.6"))
     st.caption("没有 API Key 也可以点击下方的 Demo，查看完整产品效果。")
 
     st.divider()
     st.subheader("产品逻辑")
-    st.caption("Brief → Insight → Strategy → Execution → Budget → KPI")
+    st.caption("需求简报 → 洞察 → 策略 → 执行 → 预算 → KPI")
 
-TAB1, TAB2 = st.tabs(["Campaign Generator", "Competitor Analyzer"])
+TAB1, TAB2 = st.tabs(["营销方案生成", "竞品传播分析"])
 
 
 def get_api_key():
@@ -79,14 +79,14 @@ CAMPAIGN_SYSTEM = dedent(
     Structure the answer with these exact sections:
     1. 一句话策略判断
     2. 目标人群与消费者洞察
-    3. 核心传播命题 / Big Idea
+    3. 核心传播命题 / 核心创意（Big Idea）
     4. 信息架构（核心卖点 + 支撑信息）
     5. 渠道与内容策略
     6. 执行节奏（预热 / 爆发 / 长尾）
     7. 预算建议（金额或比例，解释为什么）
     8. KPI 与衡量方式
     9. 风险与待验证假设
-    10. 一页式 Campaign Summary
+    10. 一页式营销方案摘要
 
     For channel strategy, distinguish platform roles rather than simply listing platforms.
     For budget, respect the user's total budget if provided.
@@ -113,7 +113,7 @@ COMPETITOR_SYSTEM = dedent(
 )
 
 with TAB1:
-    st.subheader("把 Brief 变成营销方案")
+    st.subheader("把需求简报变成营销方案")
     col1, col2 = st.columns(2)
     with col1:
         brand = st.text_input("品牌 / 产品", placeholder="例如：Logitech Zone Vibe Pro")
@@ -126,10 +126,10 @@ with TAB1:
         )
     with col2:
         budget = st.text_input("预算", placeholder="例如：15 万元")
-        duration = st.text_input("Campaign 周期", placeholder="例如：6 周")
+        duration = st.text_input("营销周期", placeholder="例如：6 周")
         tone = st.text_input("品牌调性 / 限制条件", placeholder="例如：专业、克制，不夸大 AI 能力")
         context = st.text_area(
-            "已知资料 / Brief",
+            "已知资料 / 需求简报",
             height=170,
             placeholder="粘贴产品卖点、背景资料、已有洞察、必须包含的信息等。",
         )
@@ -151,8 +151,8 @@ with TAB1:
     )
 
     c1, c2 = st.columns([1, 1])
-    generate = c1.button("✨ 生成 Campaign", type="primary", use_container_width=True)
-    demo = c2.button("▶ 查看 Demo", use_container_width=True)
+    generate = c1.button("✨ 生成营销方案", type="primary", use_container_width=True)
+    demo = c2.button("▶ 查看示例", use_container_width=True)
 
     if generate:
         if not brand and not context:
@@ -163,7 +163,7 @@ with TAB1:
                     result = call_openai(CAMPAIGN_SYSTEM, user_prompt)
                 st.session_state["campaign_result"] = result
             except ValueError:
-                st.info("当前没有 API Key。你可以先点击“查看 Demo”，或在左侧填入 OpenAI API Key。")
+                st.info("当前没有 API Key。你可以先点击“查看示例”，或在左侧填入 OpenAI API Key。")
             except Exception as exc:
                 st.error(f"生成失败：{exc}")
 
@@ -177,7 +177,7 @@ with TAB1:
             **核心人群：** 22–30 岁、频繁在办公室 / 居家 / 咖啡店切换的年轻职场人。\n\n
             **洞察假设：** 他们购买办公耳机并不只追求音质，而是在寻找一种能降低环境干扰、减少会议疲劳、保持专业状态的工具。该洞察需通过用户访谈或搜索趋势进一步验证。
 
-            ## 3. 核心传播命题 / Big Idea
+            ## 3. 核心传播命题 / 核心创意（Big Idea）
             **“把注意力留给真正重要的事。”**\n\n
             产品角色：不是又一个耳机，而是帮助用户从嘈杂环境切回专注状态的工作入口。
 
@@ -212,10 +212,10 @@ with TAB1:
             - 不同办公场景下最强卖点排序：待验证
             - 避免夸大降噪、会议或 AI 能力
 
-            ## 10. 一页式 Campaign Summary
+            ## 10. 一页式营销方案摘要
             **目标：** 新品种草 + 转化\n
             **人群：** 混合办公年轻职场人\n
-            **Big Idea：** 把注意力留给真正重要的事\n
+            **核心创意（Big Idea）：** 把注意力留给真正重要的事\n
             **核心打法：** 场景种草 → 深度测评 → 电商承接 → 线下验证\n
             **关键指标：** 搜索增量、收藏率、点击率、优惠码转化、用户反馈质量
             """
@@ -227,7 +227,7 @@ with TAB1:
         st.download_button(
             "下载方案 Markdown",
             st.session_state["campaign_result"],
-            file_name="campaign_strategy.md",
+            file_name="营销方案.md",
             mime="text/markdown",
         )
 
@@ -263,9 +263,10 @@ with TAB2:
         st.download_button(
             "下载竞品分析 Markdown",
             st.session_state["competitor_result"],
-            file_name="competitor_analysis.md",
+            file_name="竞品传播分析.md",
             mime="text/markdown",
         )
 
 st.divider()
-st.caption("Built as a practical AI marketing workflow prototype. AI output should be reviewed by a human before external use.")
+st.caption("本工具为 AI 营销工作流原型。AI 生成内容在对外使用前，请由人工复核。")
+
